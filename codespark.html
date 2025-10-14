@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Spark Academy - Learn Coding & AI</title>
+    <!-- React & ReactDOM CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom animations */
+        @keyframes sparkyDance {
+            0% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(10deg) scale(1.1); }
+            50% { transform: rotate(-10deg) scale(1); }
+            75% { transform: rotate(10deg) scale(1.1); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+        .sparky-dance { animation: sparkyDance 1s ease-in-out infinite; }
+        
+        .confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000; }
+        .confetti-piece { position: absolute; width: 10px; height: 10px; background: #FF6B6B; animation: confetti-fall 3s linear infinite; }
+        @keyframes confetti-fall { 
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; } 
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } 
+        }
+        
+        .high-contrast { 
+            filter: contrast(1.5) brightness(1.2); 
+            background: #000 !important;
+            color: #fff !important;
+        }
+        
+        .lesson-complete {
+            animation: lessonComplete 0.5s ease-in-out;
+        }
+        @keyframes lessonComplete {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .sparky-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .btn-hover {
+            transition: all 0.3s ease;
+        }
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .code-editor {
+            font-family: 'Courier New', monospace;
+            background: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 8px;
+            padding: 12px;
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        /* Dashboard card styling */
+        .dashboard-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            border-color: #8b5cf6;
+        }
+        .dashboard-card.active {
+            border-color: #8b5cf6;
+            background: #faf5ff;
+        }
+        .dashboard-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+        .dashboard-card p {
+            color: #6b7280;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        .dashboard-card hr {
+            border: 0;
+            border-top: 1px solid #e5e7eb;
+            margin: 1rem 0;
+        }
+        .stars {
+            color: #fbbf24;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .author {
+            color: #6b7280;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        /* Maze game styles */
+        .maze-cell { width: 30px; height: 30px; border: 1px solid #e5e7eb; }
+        .maze-wall { background: #4b5563; }
+        .maze-path { background: #f3f4f6; }
+        .maze-player { background: #ef4444; border-radius: 50%; }
+        .maze-goal { background: #10b981; border-radius: 8px; }
+        
+        /* Quiz styles */
+        .quiz-option {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .quiz-option:hover {
+            border-color: #8b5cf6;
+            background: #faf5ff;
+        }
+        .quiz-option.selected {
+            border-color: #8b5cf6;
+            background: #faf5ff;
+        }
+        .quiz-option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+        }
+        .quiz-option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+        }
+        
+        /* Progress animations */
+        @keyframes progressGrow {
+            from { width: 0%; }
+            to { width: var(--progress-width); }
+        }
+        .progress-animate {
+            animation: progressGrow 1s ease-out;
+        }
+        
+        /* Game completion overlay */
+        .completion-overlay {
+            background: rgba(0, 0, 0, 0.8);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        /* AI Art Gallery */
+        .art-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .art-item {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .art-emoji {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-100 min-h-screen font-sans text-gray-800">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useCallback } = React;
+
+        // Enhanced lessons data with quizzes
+        const lessonsData = {
+            variables: { 
+                title: 'Variables: Make Sparky Say Your Name!', 
+                content: '<p>Variables are like labeled boxes that store information. In programming, we use variables to remember values!</p><p class="mt-2"><strong>Example:</strong> <code>let name = "Alex";</code> creates a variable called "name" with the value "Alex".</p>', 
+                code: 'let name = "YourName";\nalert("Hi " + name + "!");',
+                hint: 'Try changing "YourName" to your actual name!',
+                quiz: {
+                    question: "What do variables do in programming?",
+                    options: [
+                        "Store and remember information",
+                        "Make the computer faster",
+                        "Create colorful graphics",
+                        "Connect to the internet"
+                    ],
+                    correct: 0
+                }
+            },
+            functions: { 
+                title: 'Functions: Make Sparky Dance!', 
+                content: '<p>Functions are reusable blocks of code that perform specific tasks. Think of them as recipes!</p><p class="mt-2"><strong>Example:</strong> <code>function dance() { sparkyDance(); }</code> creates a function that makes Sparky dance when called.</p>', 
+                code: 'function makeSparkyDance() {\n  // Add dance commands here\n  alert("Sparky is dancing! 💃");\n}\n\nmakeSparkyDance();',
+                hint: 'Try adding more alert messages inside the function!',
+                quiz: {
+                    question: "What are functions used for?",
+                    options: [
+                        "Reusable code blocks that perform tasks",
+                        "Storing large amounts of data",
+                        "Making websites load faster",
+                        "Creating video games only"
+                    ],
+                    correct: 0
+                }
+            },
+            loops: { 
+                title: 'Loops: Draw a Star Pattern', 
+                content: '<p>Loops let you repeat actions without writing the same code multiple times. They\'re great for patterns!</p><p class="mt-2"><strong>Example:</strong> <code>for(let i=0; i<5; i++) { drawStar(); }</code> draws 5 stars.</p>', 
+                code: 'for(let i=0; i<5; i++) {\n  console.log("⭐ Star " + (i+1));\n}',
+                hint: 'Try changing the number 5 to a different number!',
+                quiz: {
+                    question: "What is the main purpose of loops?",
+                    options: [
+                        "Repeat actions multiple times",
+                        "Make decisions in code",
+                        "Store user information",
+                        "Create beautiful colors"
+                    ],
+                    correct: 0
+                }
+            },
+            whatIsAI: {
+                title: 'What is Artificial Intelligence?',
+                content: '<p>AI is technology that can learn, reason, and solve problems - just like humans! AI can recognize images, understand speech, and even create art.</p><div class="art-gallery"><div class="art-item"><div class="art-emoji">🤖</div><div>Smart Robots</div></div><div class="art-item"><div class="art-emoji">🎨</div><div>AI Artists</div></div><div class="art-item"><div class="art-emoji">🔍</div><div>Pattern Finders</div></div><div class="art-item"><div class="art-emoji">💬</div><div>Chat Assistants</div></div></div>',
+                code: '// AI can help us solve problems!\nlet problem = "Sort these pictures of animals";\nlet aiSolution = "I can group them by type!";\nconsole.log(aiSolution);',
+                hint: 'Think about how AI helps in your favorite apps!',
+                quiz: {
+                    question: "What can AI do?",
+                    options: [
+                        "Learn, reason, and solve problems",
+                        "Only play chess",
+                        "Replace all human jobs",
+                        "Read minds"
+                    ],
+                    correct: 0
+                }
+            },
+            goodPrompts: {
+                title: 'Writing Good AI Prompts',
+                content: '<p>Good prompts are clear, specific instructions you give to AI. The better your prompt, the better the result!</p><p class="mt-2"><strong>Tips:</strong></p><ul class="list-disc list-inside mt-2"><li>Be specific about what you want</li><li>Include important details</li><li>Say what you want the AI to do</li><li>Give examples if possible</li></ul>',
+                code: '// Good prompt: "Draw a red dragon eating ice cream"\n// Bad prompt: "Draw something cool"',
+                hint: 'Try being specific when talking to Sparky!',
+                quiz: {
+                    question: "What makes a good AI prompt?",
+                    options: [
+                        "Clear and specific instructions",
+                        "Very short and vague",
+                        "Using complex technical words",
+                        "Asking for everything at once"
+                    ],
+                    correct: 0
+                }
+            },
+            bias: {
+                title: 'Understanding AI Bias',
+                content: '<p>AI learns from data created by humans, so it can sometimes reflect human biases. It\'s important to be aware of this!</p><p class="mt-2"><strong>Example:</strong> If an AI is trained mostly on pictures of cats, it might not recognize dogs well.</p><p class="mt-2"><strong>How to be fair:</strong></p><ul class="list-disc list-inside mt-2"><li>Use diverse training data</li><li>Test AI with different examples</li><li>Think critically about AI answers</li></ul>',
+                code: '// Always check if AI is being fair\nfunction checkForBias(aiResponse) {\n  // Look for unfair patterns\n  return "Thinking critically!";\n}',
+                hint: 'Always think critically about AI responses!',
+                quiz: {
+                    question: "Why can AI have biases?",
+                    options: [
+                        "It learns from human-created data",
+                        "It hates certain things",
+                        "It gets tired like humans",
+                        "It\'s programmed to be unfair"
+                    ],
+                    correct: 0
+                }
+            },
+            creativeUses: {
+                title: 'Creative Uses of AI',
+                content: '<p>AI can be used for amazing creative projects! It can help write stories, compose music, create art, and more.</p><div class="art-gallery mt-4"><div class="art-item"><div class="art-emoji">📝</div><div>Story Writing</div></div><div class="art-item"><div class="art-emoji">🎵</div><div>Music Creation</div></div><div class="art-item"><div class="art-emoji">🎨</div><div>Digital Art</div></div><div class="art-item"><div class="art-emoji">🎮</div><div>Game Design</div></div></div><p class="mt-4"><strong>Try this:</strong> Using AI to brainstorm ideas for a game or story!</p>',
+                code: '// AI can help brainstorm ideas\nlet storyIdeas = ["space adventure", "magical forest", "robot friendship"];\nconsole.log("AI suggests: " + storyIdeas.join(", "));',
+                hint: 'Ask Sparky for creative coding project ideas!',
+                quiz: {
+                    question: "What creative things can AI help with?",
+                    options: [
+                        "Writing stories and creating art",
+                        "Only mathematical calculations",
+                        "Cleaning your room",
+                        "Making breakfast"
+                    ],
+                    correct: 0
+                }
+            },
+            aiArt: {
+                title: 'AI Art Generator',
+                content: '<p>Create amazing art with AI! Describe what you want to see, and AI can generate images, patterns, and designs.</p><div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mt-4"><strong>🎨 Try It:</strong> Describe a scene and see what AI creates!</div>',
+                code: '// Describe your art idea\nlet artDescription = "A rainbow unicorn flying over a candy castle";\nconsole.log("Creating: " + artDescription);',
+                hint: 'Be creative with your descriptions!',
+                type: 'creative',
+                quiz: {
+                    question: "What do you need to create AI art?",
+                    options: [
+                        "A creative description of what you want",
+                        "Special art supplies",
+                        "Years of art training",
+                        "A super expensive computer"
+                    ],
+                    correct: 0
+                }
+            },
+            maze: { 
+                title: 'Maze Runner Challenge', 
+                content: '<p>Help Sparky navigate through the maze using code blocks! Drag the code blocks to create your solution.</p>', 
+                code: '',
+                hint: 'Plan your path before writing code!',
+                type: 'game'
+            },
+            bugHunt: { 
+                title: 'Bug Hunt Adventure', 
+                content: '<p>Find and fix the bugs in this broken code! Look for syntax errors and logical mistakes.</p>', 
+                code: 'function calculateSum(a, b) {\n  return a + b\n}\n\n// This should return 8\nconsole.log(calculateSum(3, 5);',
+                hint: 'Check for missing parentheses and semicolons!',
+                type: 'debug'
+            }
+        };
+
+        // Dashboard modules data
+        const dashboardModules = [
+            {
+                id: 'welcome',
+                title: 'Welcome',
+                description: 'Welcome! Follow along with these interactive coding lessons and activities.',
+                stars: '★★★★★',
+                author: 'Rase Noat',
+                icon: '👋'
+            },
+            {
+                id: 'ai-ethics',
+                title: 'AI Ethics',
+                description: 'Learn about responsible AI use and how to create positive impacts with technology.',
+                stars: '★★★★★',
+                author: 'Rake Noat',
+                icon: '🤖'
+            },
+            {
+                id: 'level-games',
+                title: 'Level Games',
+                description: 'You have the skills to tackle these challenges. Test your knowledge and earn rewards.',
+                stars: '★★★★★',
+                author: 'Rase Noat',
+                icon: '🎮'
+            },
+            {
+                id: 'interactive-story',
+                title: 'Interactive Story',
+                description: 'Create your own interactive stories where readers make choices that change the outcome.',
+                stars: '★★★★★',
+                author: 'Rose Noat',
+                icon: '📖'
+            },
+            {
+                id: 'rock-hunt',
+                title: 'Rock-Hunt Stars',
+                description: 'Explore the world of coding through this exciting treasure hunt adventure.',
+                stars: '★★★★★',
+                author: 'Voxel',
+                icon: '💎'
+            },
+            {
+                id: 'level-hard',
+                title: 'Level-Hard',
+                description: 'Challenge yourself with these advanced coding puzzles and problems.',
+                stars: '★★★★★',
+                author: 'Voxel',
+                icon: '💪'
+            }
+        ];
+
+        // Maze configuration
+        const mazeConfig = {
+            layout: [
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+                [1, 0, 1, 0, 1, 0, 1, 1, 0, 1],
+                [1, 0, 1, 0, 0, 0, 0, 1, 0, 1],
+                [1, 0, 1, 1, 1, 1, 0, 1, 0, 1],
+                [1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+                [1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            ],
+            start: { x: 1, y: 1 },
+            end: { x: 8, y: 8 }
+        };
+
+        // Initial state
+        const initialState = {
+            userName: 'Coder',
+            avatar: '🤖',
+            progress: 0,
+            stars: 0,
+            streak: 0,
+            completedLessons: [],
+            timeSpent: 0,
+            parentEmail: '',
+            lastLogin: null,
+            highContrast: false,
+            fontSize: 'normal',
+            currentView: 'welcome',
+            currentLevel: null,
+            currentLesson: null,
+            activeModule: null
+        };
+
+        // AI responses for Sparky chat
+        const aiResponses = {
+            coding: { q: /code|variable|loop|function|program/i, r: 'Variables store info, like let x = 5; Loops repeat actions: for(i=0; i<10; i++) {}. Functions are reusable code blocks!' },
+            ai: { q: /ai|prompt|intelligence/i, r: 'AI learns from data! Good prompts are clear and specific, like "Draw a red dragon eating ice cream".' },
+            help: { q: /help|stuck|problem/i, r: 'Try breaking the problem into smaller parts. Or ask a grownup for help!' },
+            fun: { q: /fun|game|play/i, r: 'Coding is super fun! You can make games, animations, and helpful tools. What would you like to create?' },
+            sparky: { q: /sparky|you|yourself/i, r: 'I\'m Sparky, your coding buddy! I love helping kids learn about coding and AI. What would you like to know?' },
+            default: 'That\'s interesting! Tell me more about coding or AI, or ask me for help with your projects.'
+        };
+
+        // Main App Component
+        function App() {
+            const [state, setState] = useState(initialState);
+            const [chatMessages, setChatMessages] = useState([]);
+            const [chatInput, setChatInput] = useState('');
+            const [codeInput, setCodeInput] = useState('');
+            const [output, setOutput] = useState('');
+            const [showOutput, setShowOutput] = useState(false);
+            const [parentPassword, setParentPassword] = useState('');
+            const [showParentContent, setShowParentContent] = useState(false);
+            const [selectedQuizOption, setSelectedQuizOption] = useState(null);
+            const [quizSubmitted, setQuizSubmitted] = useState(false);
+            const [mazeState, setMazeState] = useState({ ...mazeConfig.start });
+            const [gameCompleted, setGameCompleted] = useState(false);
+            const [debugCode, setDebugCode] = useState('');
+            const [debugFixed, setDebugFixed] = useState(false);
+            const [artDescription, setArtDescription] = useState('');
+            const [generatedArt, setGeneratedArt] = useState('');
+
+            // Load state from localStorage on component mount
+            useEffect(() => {
+                const saved = localStorage.getItem('codespark-state');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    setState(prevState => ({ ...prevState, ...parsed }));
+                    checkStreak(parsed);
+                } else {
+                    seedProgress();
+                }
+                applyAccessibilitySettings();
+            }, []);
+
+            // Save state to localStorage whenever state changes
+            useEffect(() => {
+                localStorage.setItem('codespark-state', JSON.stringify(state));
+            }, [state]);
+
+            // Timer for time spent
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setState(prev => ({ ...prev, timeSpent: prev.timeSpent + 1 }));
+                }, 1000);
+                return () => clearInterval(interval);
+            }, []);
+
+            const seedProgress = () => {
+                setState(prev => ({
+                    ...prev,
+                    stars: 2,
+                    completedLessons: [],
+                    streak: 1,
+                    lastLogin: new Date().toDateString()
+                }));
+            };
+
+            const checkStreak = (currentState) => {
+                const today = new Date().toDateString();
+                if (currentState.lastLogin !== today) {
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    
+                    let newStreak = currentState.streak;
+                    if (currentState.lastLogin === yesterday.toDateString()) {
+                        newStreak += 1;
+                    } else {
+                        newStreak = 1;
+                    }
+                    
+                    setState(prev => ({
+                        ...prev,
+                        streak: newStreak,
+                        lastLogin: today
+                    }));
+                }
+            };
+
+            const updateUI = useCallback(() => {
+                // UI updates are handled through state changes
+                const progressPercent = Math.min(100, (state.stars / 20) * 100);
+                setState(prev => ({ ...prev, progress: progressPercent }));
+            }, [state.stars]);
+
+            const setAvatar = (avatar) => {
+                setState(prev => ({ ...prev, avatar }));
+            };
+
+            const startAdventure = (userName, parentEmail) => {
+                setState(prev => ({
+                    ...prev,
+                    userName: userName || prev.userName,
+                    parentEmail: parentEmail || prev.parentEmail,
+                    currentView: 'dashboard'
+                }));
+            };
+
+            const showLevel = (levelId) => {
+                setState(prev => ({ 
+                    ...prev, 
+                    currentView: 'level',
+                    currentLevel: levelId
+                }));
+            };
+
+            const showLesson = (lessonId) => {
+                setState(prev => ({ 
+                    ...prev, 
+                    currentView: 'lesson',
+                    currentLesson: lessonId
+                }));
+                setCodeInput(lessonsData[lessonId]?.code || '');
+                setOutput('');
+                setShowOutput(false);
+                setSelectedQuizOption(null);
+                setQuizSubmitted(false);
+                setDebugCode(lessonsData[lessonId]?.code || '');
+                setDebugFixed(false);
+                setArtDescription('');
+                setGeneratedArt('');
+                
+                // Reset maze for maze game
+                if (lessonId === 'maze') {
+                    setMazeState({ ...mazeConfig.start });
+                    setGameCompleted(false);
+                }
+            };
+
+            const closeLesson = () => {
+                setState(prev => ({ 
+                    ...prev, 
+                    currentView: 'level'
+                }));
+            };
+
+            const runCode = () => {
+                setShowOutput(true);
+                
+                try {
+                    if (codeInput.includes('alert')) {
+                        setOutput('✅ Success! Code would show an alert message.');
+                        showConfetti();
+                    } else if (codeInput.includes('console.log') || codeInput.includes('for')) {
+                        setOutput('✅ Success! Code would output to console.');
+                        showConfetti();
+                    } else if (codeInput.includes('let') || codeInput.includes('function')) {
+                        setOutput('✅ Success! Code defines variables/functions.');
+                        showConfetti();
+                    } else {
+                        throw new Error('Try adding alert, console.log, or a loop!');
+                    }
+                } catch (e) {
+                    setOutput(`❌ Oops! Sparky tripped: ${e.message}. Try again! 😅`);
+                }
+            };
+
+            const submitQuiz = () => {
+                if (selectedQuizOption === null) return;
+                
+                setQuizSubmitted(true);
+                const lesson = lessonsData[state.currentLesson];
+                const isCorrect = selectedQuizOption === lesson.quiz.correct;
+                
+                if (isCorrect) {
+                    setTimeout(() => {
+                        completeLessonWithReward();
+                    }, 1500);
+                }
+            };
+
+            const completeLessonWithReward = () => {
+                const lessonId = state.currentLesson;
+                if (!lessonId || state.completedLessons.includes(lessonId)) return;
+                
+                setState(prev => ({
+                    ...prev,
+                    completedLessons: [...prev.completedLessons, lessonId],
+                    stars: prev.stars + 1
+                }));
+                
+                showConfetti();
+                setTimeout(() => {
+                    alert('🎉 Great job! You earned a star! 🌟');
+                    closeLesson();
+                }, 1000);
+            };
+
+            const completeGame = () => {
+                const lessonId = state.currentLesson;
+                if (!lessonId || state.completedLessons.includes(lessonId)) return;
+                
+                setState(prev => ({
+                    ...prev,
+                    completedLessons: [...prev.completedLessons, lessonId],
+                    stars: prev.stars + 1
+                }));
+                
+                setGameCompleted(true);
+                showConfetti();
+            };
+
+            // Maze game functions
+            const movePlayer = (direction) => {
+                setMazeState(prev => {
+                    const newState = { ...prev };
+                    
+                    switch (direction) {
+                        case 'up': newState.y--; break;
+                        case 'down': newState.y++; break;
+                        case 'left': newState.x--; break;
+                        case 'right': newState.x++; break;
+                    }
+                    
+                    // Check if player reached the end
+                    if (newState.x === mazeConfig.end.x && newState.y === mazeConfig.end.y) {
+                        completeGame();
+                    }
+                    
+                    // Check for walls
+                    if (mazeConfig.layout[newState.y]?.[newState.x] === 1) {
+                        return prev; // Don't move through walls
+                    }
+                    
+                    return newState;
+                });
+            };
+
+            const checkDebugCode = () => {
+                const fixedCode = `function calculateSum(a, b) {\n  return a + b;\n}\n\n// This should return 8\nconsole.log(calculateSum(3, 5));`;
+                
+                if (debugCode.replace(/\s/g, '') === fixedCode.replace(/\s/g, '')) {
+                    setDebugFixed(true);
+                    completeLessonWithReward();
+                } else {
+                    alert('Not quite! Look for missing semicolons and parentheses.');
+                }
+            };
+
+            const generateArt = () => {
+                if (!artDescription.trim()) {
+                    alert('Please describe what you want to create!');
+                    return;
+                }
+
+                // Simple AI art generation simulation
+                const artEmojis = ['🎨', '🌟', '🦄', '🏰', '🌈', '🚀', '🐉', '🎪', '🌄', '🎭'];
+                const randomArt = artEmojis[Math.floor(Math.random() * artEmojis.length)];
+                
+                setGeneratedArt(randomArt);
+                showConfetti();
+                
+                setTimeout(() => {
+                    completeLessonWithReward();
+                }, 2000);
+            };
+
+            const showSparkyChat = () => {
+                setState(prev => ({ ...prev, currentView: 'chat' }));
+                setChatMessages([{ sender: 'Sparky', text: 'Hi there! I\'m Sparky, your AI coding buddy. Ask me anything about coding or AI!' }]);
+            };
+
+            const closeChat = () => {
+                setState(prev => ({ ...prev, currentView: 'dashboard' }));
+            };
+
+            const sendMessage = () => {
+                if (!chatInput.trim()) return;
+                
+                const newMessages = [...chatMessages, { sender: 'You', text: chatInput }];
+                setChatMessages(newMessages);
+                
+                // Rule-based response
+                let response = aiResponses.default;
+                for (let key in aiResponses) {
+                    if (aiResponses[key].q.test(chatInput)) {
+                        response = aiResponses[key].r;
+                        break;
+                    }
+                }
+                
+                setTimeout(() => {
+                    setChatMessages(prev => [...prev, { sender: 'Sparky', text: response }]);
+                }, 500 + Math.random() * 1000);
+                
+                setChatInput('');
+            };
+
+            const showConfetti = () => {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                document.body.appendChild(confetti);
+                
+                for (let i = 0; i < 50; i++) {
+                    const piece = document.createElement('div');
+                    piece.className = 'confetti-piece';
+                    piece.style.left = Math.random() * 100 + '%';
+                    piece.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                    piece.style.animationDelay = Math.random() * 3 + 's';
+                    confetti.appendChild(piece);
+                }
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            };
+
+            const toggleParental = () => {
+                setState(prev => ({ ...prev, currentView: 'parental' }));
+                setShowParentContent(false);
+                setParentPassword('');
+            };
+
+            const closeParental = () => {
+                setState(prev => ({ ...prev, currentView: 'dashboard' }));
+            };
+
+            const checkParental = () => {
+                if (parentPassword === 'parent') {
+                    setShowParentContent(true);
+                } else {
+                    alert('Incorrect password. Try again.');
+                }
+            };
+
+            const resetProgress = () => {
+                if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                    localStorage.clear();
+                    window.location.reload();
+                }
+            };
+
+            const toggleHighContrast = () => {
+                setState(prev => ({ ...prev, highContrast: !prev.highContrast }));
+                document.body.classList.toggle('high-contrast');
+            };
+
+            const toggleFontSize = () => {
+                const sizes = ['normal', 'large', 'x-large'];
+                const currentIndex = sizes.indexOf(state.fontSize);
+                const newSize = sizes[(currentIndex + 1) % sizes.length];
+                
+                setState(prev => ({ ...prev, fontSize: newSize }));
+                
+                document.body.style.fontSize = 
+                    newSize === 'normal' ? '' : 
+                    newSize === 'large' ? '18px' : '22px';
+            };
+
+            const applyAccessibilitySettings = () => {
+                if (state.highContrast) {
+                    document.body.classList.add('high-contrast');
+                }
+                if (state.fontSize === 'large') {
+                    document.body.style.fontSize = '18px';
+                } else if (state.fontSize === 'x-large') {
+                    document.body.style.fontSize = '22px';
+                }
+            };
+
+            const showDashboard = () => {
+                setState(prev => ({ ...prev, currentView: 'dashboard' }));
+            };
+
+            const showModule = (moduleId) => {
+                setState(prev => ({ ...prev, activeModule: moduleId }));
+                // For now, show an alert. You can expand this to show actual module content
+                alert(`Opening ${moduleId} module! This would show specific content for this module.`);
+            };
+
+            // Progress calculation
+            const progressPercent = Math.min(100, (state.stars / 20) * 100);
+
+            // Render different views based on currentView state
+            const renderCurrentView = () => {
+                switch (state.currentView) {
+                    case 'welcome':
+                        return <WelcomeView onStartAdventure={startAdventure} />;
+                    case 'dashboard':
+                        return (
+                            <DashboardView
+                                state={state}
+                                onShowLevel={showLevel}
+                                onShowSparkyChat={showSparkyChat}
+                                onToggleParental={toggleParental}
+                                onSetAvatar={setAvatar}
+                                onShowModule={showModule}
+                                progressPercent={progressPercent}
+                                activeModule={state.activeModule}
+                            />
+                        );
+                    case 'level':
+                        return <LevelView state={state} onShowLesson={showLesson} onShowDashboard={showDashboard} />;
+                    case 'lesson':
+                        const lesson = lessonsData[state.currentLesson];
+                        if (lesson?.type === 'game') {
+                            return (
+                                <MazeGameView
+                                    mazeState={mazeState}
+                                    onMovePlayer={movePlayer}
+                                    onCloseLesson={closeLesson}
+                                    gameCompleted={gameCompleted}
+                                />
+                            );
+                        } else if (lesson?.type === 'debug') {
+                            return (
+                                <DebugGameView
+                                    debugCode={debugCode}
+                                    onDebugCodeChange={setDebugCode}
+                                    onCheckDebug={checkDebugCode}
+                                    debugFixed={debugFixed}
+                                    onCloseLesson={closeLesson}
+                                />
+                            );
+                        } else if (lesson?.type === 'creative') {
+                            return (
+                                <CreativeAIView
+                                    artDescription={artDescription}
+                                    onArtDescriptionChange={setArtDescription}
+                                    onGenerateArt={generateArt}
+                                    generatedArt={generatedArt}
+                                    onCloseLesson={closeLesson}
+                                />
+                            );
+                        } else {
+                            return (
+                                <LessonView
+                                    state={state}
+                                    lessonsData={lessonsData}
+                                    codeInput={codeInput}
+                                    onCodeInputChange={setCodeInput}
+                                    onRunCode={runCode}
+                                    onCompleteLesson={completeLessonWithReward}
+                                    onCloseLesson={closeLesson}
+                                    output={output}
+                                    showOutput={showOutput}
+                                    selectedQuizOption={selectedQuizOption}
+                                    onQuizOptionSelect={setSelectedQuizOption}
+                                    quizSubmitted={quizSubmitted}
+                                    onSubmitQuiz={submitQuiz}
+                                />
+                            );
+                        }
+                    case 'chat':
+                        return (
+                            <ChatView
+                                chatMessages={chatMessages}
+                                chatInput={chatInput}
+                                onChatInputChange={setChatInput}
+                                onSendMessage={sendMessage}
+                                onCloseChat={closeChat}
+                            />
+                        );
+                    case 'parental':
+                        return (
+                            <ParentalView
+                                state={state}
+                                parentPassword={parentPassword}
+                                onParentPasswordChange={setParentPassword}
+                                onCheckParental={checkParental}
+                                onResetProgress={resetProgress}
+                                onCloseParental={closeParental}
+                                showParentContent={showParentContent}
+                                progressPercent={progressPercent}
+                            />
+                        );
+                    default:
+                        return <WelcomeView onStartAdventure={startAdventure} />;
+                }
+            };
+
+            return (
+                <div className="container mx-auto p-4 max-w-md">
+                    {/* Accessibility Controls - Show on all views except welcome */}
+                    {state.currentView !== 'welcome' && (
+                        <div className="flex justify-end mb-4 space-x-2">
+                            <button 
+                                onClick={toggleHighContrast}
+                                className={`px-3 py-1 rounded text-sm btn-hover ${
+                                    state.highContrast 
+                                        ? 'bg-purple-600 text-white' 
+                                        : 'bg-gray-200 text-gray-800'
+                                }`}
+                            >
+                                {state.highContrast ? 'Normal Mode' : 'High Contrast'}
+                            </button>
+                            <button 
+                                onClick={toggleFontSize}
+                                className="bg-blue-500 text-white px-3 py-1 rounded text-sm btn-hover"
+                            >
+                                A+
+                            </button>
+                        </div>
+                    )}
+
+                    {renderCurrentView()}
+                </div>
+            );
+        }
+
+        // Welcome View Component
+        function WelcomeView({ onStartAdventure }) {
+            const [userName, setUserName] = React.useState('');
+            const [parentEmail, setParentEmail] = React.useState('');
+
+            const handleStart = () => {
+                if (userName.trim()) {
+                    onStartAdventure(userName, parentEmail);
+                } else {
+                    alert('Please enter your name to start!');
+                }
+            };
+
+            return (
+                <div className="text-center">
+                    <div className="sparky mb-4 sparky-float text-6xl">🤖</div>
+                    <h1 className="text-4xl font-bold text-purple-600 mb-4">Code Spark Academy</h1>
+                    <p className="mb-6 text-lg text-gray-600">Hi! I'm Sparky, your robot buddy. Ready to learn coding and AI magic?</p>
+                    
+                    <div className="bg-white rounded-2xl p-6 shadow-lg mb-6">
+                        <div className="mb-6">
+                            <label htmlFor="userNameInput" className="block text-left mb-2 font-medium">What's your name?</label>
+                            <input 
+                                type="text" 
+                                id="userNameInput" 
+                                placeholder="Enter your name" 
+                                className="border-2 border-gray-200 p-3 mb-4 w-full rounded-xl focus:border-purple-500 focus:outline-none"
+                                value={userName}
+                                onChange={(e) => setUserName(e.target.value)}
+                            />
+                        </div>
+                        
+                        <div className="mb-6">
+                            <label htmlFor="parentEmail" className="block text-left mb-2 font-medium">Parent email (optional)</label>
+                            <input 
+                                type="email" 
+                                id="parentEmail" 
+                                placeholder="Parent email" 
+                                className="border-2 border-gray-200 p-3 mb-4 w-full rounded-xl focus:border-purple-500 focus:outline-none"
+                                value={parentEmail}
+                                onChange={(e) => setParentEmail(e.target.value)}
+                            />
+                        </div>
+                        
+                        <button 
+                            onClick={handleStart}
+                            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-xl text-lg font-bold btn-hover shadow-lg w-full"
+                        >
+                            Start Adventure! 🚀
+                        </button>
+                    </div>
+                    
+                    <div className="text-sm text-gray-500">
+                        <p>Learn coding basics, AI concepts, and create fun projects!</p>
+                    </div>
+                </div>
+            );
+        }
+
+        // Dashboard View Component
+        function DashboardView({ state, onShowLevel, onShowSparkyChat, onToggleParental, onSetAvatar, onShowModule, progressPercent, activeModule }) {
+            return (
+                <div>
+                    <div className="text-center mb-6">
+                        <div className="sparky mb-4 sparky-float text-6xl">{state.avatar}</div>
+                        <h1 className="text-2xl font-bold mb-2">Welcome back, <span className="text-purple-600">{state.userName}</span>!</h1>
+                        <p className="text-gray-600 mb-4">Let's continue your coding journey!</p>
+                    </div>
+                    
+                    {/* Progress Section */}
+                    <div className="bg-white rounded-2xl p-6 shadow-lg mb-6">
+                        <div className="flex justify-between mb-3">
+                            <span className="font-medium">Your Progress</span>
+                            <span className="font-bold text-purple-600">{Math.round(progressPercent)}%</span>
+                        </div>
+                        <div className="bg-gray-200 h-4 rounded-full mb-3 overflow-hidden">
+                            <div 
+                                className="bg-gradient-to-r from-green-400 to-blue-500 h-4 rounded-full progress-animate" 
+                                style={{ width: `${progressPercent}%` }}
+                            ></div>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                            <span className="flex items-center">⭐ {state.stars}/20 stars</span>
+                            <span className="text-orange-500 flex items-center">🔥 {state.streak} day streak</span>
+                        </div>
+                    </div>
+                    
+                    {/* Dashboard Cards */}
+                    <div className="mb-6">
+                        {dashboardModules.map(module => (
+                            <div 
+                                key={module.id}
+                                className={`dashboard-card ${activeModule === module.id ? 'active' : ''}`}
+                                onClick={() => onShowModule(module.id)}
+                            >
+                                <div className="flex items-start justify-between">
+                                    <div className="flex-1">
+                                        <h3>{module.title}</h3>
+                                        <p>{module.description}</p>
+                                    </div>
+                                    <div className="text-2xl ml-4">{module.icon}</div>
+                                </div>
+                                <div className="stars">{module.stars}</div>
+                                <hr />
+                                <div className="author">{module.author}</div>
+                            </div>
+                        ))}
+                    </div>
+                    
+                    {/* Avatar Picker */}
+                    <div className="bg-white rounded-2xl p-6 shadow-lg mb-6">
+                        <h2 className="font-bold mb-4 text-lg">Your Avatar</h2>
+                        <div className="text-6xl mb-4 text-center">{state.avatar}</div>
+                        <div className="flex justify-center space-x-4">
+                            {['🤖', '🦄', '🚀', '⭐', '🐱', '🐼'].map(avatar => (
+                                <button 
+                                    key={avatar}
+                                    onClick={() => onSetAvatar(avatar)}
+                                    className="text-3xl p-3 rounded-2xl bg-gray-100 hover:bg-purple-100 transition-colors btn-hover"
+                                >
+                                    {avatar}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    {/* Navigation */}
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                        <button 
+                            onClick={() => onShowLevel(1)}
+                            className="bg-gradient-to-br from-yellow-400 to-yellow-500 text-white p-4 rounded-2xl font-bold btn-hover shadow-lg"
+                        >
+                            Coding Basics
+                        </button>
+                        <button 
+                            onClick={() => onShowLevel(2)}
+                            className="bg-gradient-to-br from-green-400 to-green-500 text-white p-4 rounded-2xl font-bold btn-hover shadow-lg"
+                        >
+                            Loops & Logic
+                        </button>
+                        <button 
+                            onClick={() => onShowLevel(3)}
+                            className="bg-gradient-to-br from-purple-400 to-purple-500 text-white p-4 rounded-2xl font-bold btn-hover shadow-lg"
+                        >
+                            AI Ethics
+                        </button>
+                        <button 
+                            onClick={() => onShowLevel(4)}
+                            className="bg-gradient-to-br from-pink-400 to-pink-500 text-white p-4 rounded-2xl font-bold btn-hover shadow-lg"
+                        >
+                            AI Creativity
+                        </button>
+                        <button 
+                            onClick={() => onShowLevel(5)}
+                            className="bg-gradient-to-br from-blue-400 to-blue-500 text-white p-4 rounded-2xl font-bold btn-hover shadow-lg"
+                        >
+                            Game Challenges
+                        </button>
+                        <button 
+                            onClick={onShowSparkyChat}
+                            className="bg-gradient-to-br from-red-400 to-red-500 text-white p-4 rounded-2xl font-bold btn-hover shadow-lg"
+                        >
+                            Chat with Sparky
+                        </button>
+                    </div>
+                    
+                    {/* Parental Toggle */}
+                    <button 
+                        onClick={onToggleParental}
+                        className="text-sm text-gray-500 underline w-full text-center py-2"
+                    >
+                        Parental Controls
+                    </button>
+                </div>
+            );
+        }
+
+        // Level View Component
+        function LevelView({ state, onShowLesson, onShowDashboard }) {
+            const levels = {
+                1: { 
+                    title: 'Coding Basics', 
+                    description: 'Learn the fundamentals of programming!', 
+                    lessons: ['variables', 'functions'] 
+                },
+                2: { 
+                    title: 'Loops & Logic', 
+                    description: 'Learn to repeat actions and make decisions!', 
+                    lessons: ['loops'] 
+                },
+                3: { 
+                    title: 'AI Ethics', 
+                    description: 'Understand how to use AI responsibly!', 
+                    lessons: ['whatIsAI', 'goodPrompts', 'bias'] 
+                },
+                4: { 
+                    title: 'AI Creativity', 
+                    description: 'Use AI to create amazing things!', 
+                    lessons: ['creativeUses', 'aiArt'] 
+                },
+                5: { 
+                    title: 'Game Challenges', 
+                    description: 'Test your skills with fun games!', 
+                    lessons: ['maze', 'bugHunt'] 
+                }
+            };
+
+            const currentLevel = levels[state.currentLevel] || levels[1];
+
+            return (
+                <div>
+                    <div className="flex items-center mb-6">
+                        <button 
+                            onClick={onShowDashboard}
+                            className="bg-gray-500 text-white p-3 rounded-2xl mr-3 btn-hover"
+                        >
+                            ←
+                        </button>
+                        <h2 className="text-2xl font-bold text-purple-600">{currentLevel.title}</h2>
+                    </div>
+                    
+                    <div className="bg-white rounded-2xl p-6 shadow-lg mb-6">
+                        <p className="text-gray-600">{currentLevel.description}</p>
+                    </div>
+                    
+                    <div className="space-y-4">
+                        {currentLevel.lessons.map(lessonId => {
+                            const lesson = lessonsData[lessonId];
+                            const isCompleted = state.completedLessons.includes(lessonId);
+                            
+                            if (!lesson) return null;
+                            
+                            return (
+                                <button 
+                                    key={lessonId}
+                                    onClick={() => onShowLesson(lessonId)}
+                                    className={`${
+                                        isCompleted 
+                                            ? 'bg-green-100 border-green-400' 
+                                            : 'bg-white border-purple-200'
+                                    } border-2 p-5 rounded-2xl w-full text-left btn-hover shadow-lg transition-all`}
+                                >
+                                    <div className="flex justify-between items-center">
+                                        <span className="font-bold text-lg">{lesson.title}</span>
+                                        <span className="text-xl">{isCompleted ? '✅' : '🎯'}</span>
+                                    </div>
+                                    {isCompleted ? (
+                                        <p className="text-sm text-green-600 mt-2 font-medium">Completed! 🌟</p>
+                                    ) : (
+                                        <p className="text-sm text-gray-500 mt-2">Click to start learning</p>
+                                    )}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        }
+
+        // Lesson View Component
+        function LessonView({ state, lessonsData, codeInput, onCodeInputChange, onRunCode, onCompleteLesson, onCloseLesson, output, showOutput, selectedQuizOption, onQuizOptionSelect, quizSubmitted, onSubmitQuiz }) {
+            const lesson = lessonsData[state.currentLesson];
+
+            if (!lesson) {
+                return <div>Lesson not found!</div>;
+            }
+
+            return (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white p-6 rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+                        <h3 className="text-2xl font-bold mb-4 text-purple-600">{lesson.title}</h3>
+                        <div 
+                            className="mb-6 text-gray-700" 
+                            dangerouslySetInnerHTML={{ __html: lesson.content }}
+                        />
+                        
+                        {lesson.code && (
+                            <div className="mb-6">
+                                <label className="block text-sm font-medium mb-3">Try it yourself:</label>
+                                <textarea 
+                                    className="code-editor w-full rounded-xl" 
+                                    rows="6"
+                                    value={codeInput}
+                                    onChange={(e) => onCodeInputChange(e.target.value)}
+                                ></textarea>
+                                <button 
+                                    onClick={onRunCode}
+                                    className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-bold btn-hover mt-3 w-full"
+                                >
+                                    Run Code 🚀
+                                </button>
+                            </div>
+                        )}
+                        
+                        {lesson.quiz && (
+                            <div className="mb-6">
+                                <h4 className="font-bold mb-3 text-lg">Quick Quiz</h4>
+                                <p className="mb-4 font-medium">{lesson.quiz.question}</p>
+                                <div className="space-y-3">
+                                    {lesson.quiz.options.map((option, index) => (
+                                        <div
+                                            key={index}
+                                            className={`quiz-option ${
+                                                selectedQuizOption === index ? 'selected' : ''
+                                            } ${
+                                                quizSubmitted 
+                                                    ? index === lesson.quiz.correct 
+                                                        ? 'correct' 
+                                                        : selectedQuizOption === index 
+                                                            ? 'incorrect' 
+                                                            : ''
+                                                    : ''
+                                            }`}
+                                            onClick={() => !quizSubmitted && onQuizOptionSelect(index)}
+                                        >
+                                            {option}
+                                        </div>
+                                    ))}
+                                </div>
+                                {!quizSubmitted ? (
+                                    <button 
+                                        onClick={onSubmitQuiz}
+                                        disabled={selectedQuizOption === null}
+                                        className={`w-full py-3 rounded-xl font-bold btn-hover mt-4 ${
+                                            selectedQuizOption === null
+                                                ? 'bg-gray-400 cursor-not-allowed'
+                                                : 'bg-blue-500 hover:bg-blue-600 text-white'
+                                        }`}
+                                    >
+                                        Submit Answer
+                                    </button>
+                                ) : (
+                                    <div className="text-center mt-4">
+                                        {selectedQuizOption === lesson.quiz.correct ? (
+                                            <p className="text-green-600 font-bold">✅ Correct! Well done!</p>
+                                        ) : (
+                                            <p className="text-red-600 font-bold">❌ Not quite! Try again.</p>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        
+                        {showOutput && (
+                            <div className="mt-4 p-4 bg-gray-100 rounded-xl">
+                                <h4 className="font-medium mb-2">Output:</h4>
+                                <div className="font-mono">{output}</div>
+                            </div>
+                        )}
+                        
+                        <div className="flex gap-3 mt-6">
+                            <button 
+                                onClick={onCloseLesson}
+                                className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-bold btn-hover flex-1"
+                            >
+                                Back
+                            </button>
+                            {quizSubmitted && selectedQuizOption === lessonsData[state.currentLesson]?.quiz?.correct && (
+                                <button 
+                                    onClick={onCompleteLesson}
+                                    className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-xl font-bold btn-hover flex-1"
+                                >
+                                    Continue ✓
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Creative AI View Component
+        function CreativeAIView({ artDescription, onArtDescriptionChange, onGenerateArt, generatedArt, onCloseLesson }) {
+            return (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white p-6 rounded-2xl max-w-md w-full">
+                        <h3 className="text-2xl font-bold mb-4 text-purple-600">AI Art Generator</h3>
+                        <p className="mb-6 text-gray-700">Create amazing art with AI! Describe what you want to see, and AI will generate it for you.</p>
+                        
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium mb-3">Describe your artwork:</label>
+                            <textarea 
+                                className="border-2 border-gray-300 p-4 w-full rounded-xl focus:border-purple-500 focus:outline-none"
+                                rows="3"
+                                placeholder="A rainbow unicorn flying over a candy castle..."
+                                value={artDescription}
+                                onChange={(e) => onArtDescriptionChange(e.target.value)}
+                            ></textarea>
+                        </div>
+                        
+                        <button 
+                            onClick={onGenerateArt}
+                            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-xl font-bold btn-hover w-full mb-6"
+                        >
+                            Generate Art! 🎨
+                        </button>
+                        
+                        {generatedArt && (
+                            <div className="text-center mb-6">
+                                <div className="text-8xl mb-4">{generatedArt}</div>
+                                <p className="text-green-600 font-bold">✨ AI created your artwork! ✨</p>
+                                <p className="text-gray-600 mt-2">You earned a star for being creative! 🌟</p>
+                            </div>
+                        )}
+                        
+                        <button 
+                            onClick={onCloseLesson}
+                            className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-bold btn-hover w-full"
+                        >
+                            Back to Lessons
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        // Maze Game Component
+        function MazeGameView({ mazeState, onMovePlayer, onCloseLesson, gameCompleted }) {
+            const renderMaze = () => {
+                return mazeConfig.layout.map((row, y) => (
+                    <div key={y} className="flex">
+                        {row.map((cell, x) => {
+                            let cellClass = 'maze-cell ';
+                            if (cell === 1) cellClass += 'maze-wall';
+                            else cellClass += 'maze-path';
+                            
+                            if (x === mazeState.x && y === mazeState.y) cellClass += ' maze-player';
+                            if (x === mazeConfig.end.x && y === mazeConfig.end.y) cellClass += ' maze-goal';
+                            
+                            return <div key={x} className={cellClass}></div>;
+                        })}
+                    </div>
+                ));
+            };
+
+            return (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white p-6 rounded-2xl max-w-md w-full">
+                        <h3 className="text-2xl font-bold mb-4 text-purple-600">Maze Runner Challenge</h3>
+                        <p className="mb-4 text-gray-700">Help Sparky navigate to the green goal! Use the buttons to move.</p>
+                        
+                        <div className="mb-6 bg-gray-800 p-4 rounded-xl">
+                            <div className="inline-block border-4 border-gray-700">
+                                {renderMaze()}
+                            </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-3 gap-3 mb-4">
+                            <div></div>
+                            <button 
+                                onClick={() => onMovePlayer('up')}
+                                className="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-xl font-bold btn-hover"
+                            >
+                                ↑
+                            </button>
+                            <div></div>
+                            <button 
+                                onClick={() => onMovePlayer('left')}
+                                className="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-xl font-bold btn-hover"
+                            >
+                                ←
+                            </button>
+                            <div></div>
+                            <button 
+                                onClick={() => onMovePlayer('right')}
+                                className="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-xl font-bold btn-hover"
+                            >
+                                →
+                            </button>
+                            <div></div>
+                            <button 
+                                onClick={() => onMovePlayer('down')}
+                                className="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-xl font-bold btn-hover"
+                            >
+                                ↓
+                            </button>
+                            <div></div>
+                        </div>
+                        
+                        <button 
+                            onClick={onCloseLesson}
+                            className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-bold btn-hover w-full"
+                        >
+                            Back to Lessons
+                        </button>
+                        
+                        {gameCompleted && (
+                            <div className="completion-overlay">
+                                <div className="bg-white p-8 rounded-2xl text-center max-w-sm">
+                                    <div className="text-6xl mb-4">🎉</div>
+                                    <h3 className="text-2xl font-bold mb-2 text-green-600">Maze Completed!</h3>
+                                    <p className="mb-4">You've earned a star! 🌟</p>
+                                    <button 
+                                        onClick={onCloseLesson}
+                                        className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-xl font-bold btn-hover"
+                                    >
+                                        Continue
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // Debug Game Component
+        function DebugGameView({ debugCode, onDebugCodeChange, onCheckDebug, debugFixed, onCloseLesson }) {
+            return (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white p-6 rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+                        <h3 className="text-2xl font-bold mb-4 text-purple-600">Bug Hunt Adventure</h3>
+                        <p className="mb-6 text-gray-700">Find and fix the bugs in this code! Look for syntax errors and missing pieces.</p>
+                        
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium mb-3">Fix the code:</label>
+                            <textarea 
+                                className="code-editor w-full rounded-xl" 
+                                rows="8"
+                                value={debugCode}
+                                onChange={(e) => onDebugCodeChange(e.target.value)}
+                            ></textarea>
+                        </div>
+                        
+                        <div className="flex gap-3">
+                            <button 
+                                onClick={onCloseLesson}
+                                className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-bold btn-hover flex-1"
+                            >
+                                Back
+                            </button>
+                            <button 
+                                onClick={onCheckDebug}
+                                className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-bold btn-hover flex-1"
+                            >
+                                Check Solution
+                            </button>
+                        </div>
+                        
+                        {debugFixed && (
+                            <div className="mt-4 p-4 bg-green-100 border border-green-400 rounded-xl text-center">
+                                <p className="text-green-700 font-bold">✅ All bugs fixed! Great job! 🌟</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // Chat View Component
+        function ChatView({ chatMessages, chatInput, onChatInputChange, onSendMessage, onCloseChat }) {
+            const chatLogRef = React.useRef(null);
+
+            React.useEffect(() => {
+                if (chatLogRef.current) {
+                    chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
+                }
+            }, [chatMessages]);
+
+            const handleKeyPress = (e) => {
+                if (e.key === 'Enter') {
+                    onSendMessage();
+                }
+            };
+
+            return (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white p-6 rounded-2xl max-w-md w-full h-96 flex flex-col">
+                        <div className="flex items-center mb-4">
+                            <div className="text-2xl mr-2">🤖</div>
+                            <h3 className="text-xl font-bold">Sparky AI Buddy</h3>
+                        </div>
+                        
+                        <div 
+                            ref={chatLogRef}
+                            className="flex-1 overflow-y-auto border border-gray-300 p-4 mb-4 bg-gray-50 rounded-xl"
+                        >
+                            {chatMessages.map((message, index) => (
+                                <div 
+                                    key={index}
+                                    className={`mb-3 ${message.sender === 'You' ? 'text-right' : ''}`}
+                                >
+                                    <span className={`inline-block px-4 py-2 rounded-2xl ${
+                                        message.sender === 'You' 
+                                            ? 'bg-purple-500 text-white' 
+                                            : 'bg-gray-200 text-gray-800'
+                                    }`}>
+                                        <strong>{message.sender}:</strong> {message.text}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <div className="flex">
+                            <input 
+                                type="text" 
+                                placeholder="Ask me about coding or AI!" 
+                                className="border-2 border-gray-300 p-3 flex-1 rounded-l-xl focus:border-purple-500 focus:outline-none"
+                                value={chatInput}
+                                onChange={(e) => onChatInputChange(e.target.value)}
+                                onKeyPress={handleKeyPress}
+                            />
+                            <button 
+                                onClick={onSendMessage}
+                                className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-r-xl font-bold btn-hover"
+                            >
+                                Send
+                            </button>
+                        </div>
+                        
+                        <button 
+                            onClick={onCloseChat}
+                            className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-bold btn-hover mt-3"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        // Parental View Component
+        function ParentalView({ state, parentPassword, onParentPasswordChange, onCheckParental, onResetProgress, onCloseParental, showParentContent, progressPercent }) {
+            return (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white p-6 rounded-2xl max-w-md w-full">
+                        <h3 className="text-2xl font-bold mb-4 text-purple-600">Parental Dashboard</h3>
+                        
+                        {!showParentContent ? (
+                            <div className="mb-4">
+                                <p className="mb-4 text-gray-700">Enter password to access parental controls:</p>
+                                <input 
+                                    type="password" 
+                                    placeholder="Password: parent" 
+                                    className="border-2 border-gray-300 p-3 mb-4 w-full rounded-xl focus:border-purple-500 focus:outline-none"
+                                    value={parentPassword}
+                                    onChange={(e) => onParentPasswordChange(e.target.value)}
+                                />
+                                <button 
+                                    onClick={onCheckParental}
+                                    className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-xl font-bold btn-hover w-full"
+                                >
+                                    Login
+                                </button>
+                            </div>
+                        ) : (
+                            <div>
+                                <div className="mb-6">
+                                    <h4 className="font-bold mb-3 text-lg">Child Progress</h4>
+                                    <div className="bg-gray-50 p-4 rounded-xl space-y-2">
+                                        <p>Progress: <span className="font-bold text-purple-600">{Math.round(progressPercent)}%</span></p>
+                                        <p>Stars Earned: <span className="font-bold">{state.stars}</span>/20</p>
+                                        <p>Time Spent: <span className="font-bold">{Math.floor(state.timeSpent / 60)}</span> minutes</p>
+                                        <p>Current Streak: <span className="font-bold text-orange-500">{state.streak}</span> days</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="mb-6">
+                                    <h4 className="font-bold mb-3 text-lg">Completed Lessons</h4>
+                                    <div className="max-h-32 overflow-y-auto border-2 border-gray-200 p-4 rounded-xl bg-gray-50">
+                                        {state.completedLessons.length > 0 ? (
+                                            state.completedLessons.map(lesson => (
+                                                <div key={lesson} className="text-sm p-2 bg-white rounded-lg mb-2 shadow-sm">
+                                                    {lessonsData[lesson]?.title || lesson}
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="text-sm p-2 text-gray-500 text-center">No lessons completed yet</div>
+                                        )}
+                                    </div>
+                                </div>
+                                
+                                <div className="flex gap-3">
+                                    <button 
+                                        onClick={onResetProgress}
+                                        className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl font-bold btn-hover flex-1"
+                                    >
+                                        Reset Progress
+                                    </button>
+                                    <button 
+                                        onClick={onCloseParental}
+                                        className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-bold btn-hover flex-1"
+                                    >
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
