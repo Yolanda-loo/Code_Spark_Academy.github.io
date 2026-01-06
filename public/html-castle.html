@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 1: HTML Castle | Code Spark</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* --- CASTLE GAME STYLES --- */
+        .game-wrapper {
+            display: flex; gap: 20px; max-width: 1200px; margin: 40px auto; height: 600px;
+        }
+
+        /* The Editor (Left) */
+        .editor-panel {
+            flex: 1; display: flex; flex-direction: column;
+            background: #263238; border-radius: 15px; border: 4px solid var(--magic-purple);
+            overflow: hidden;
+        }
+        .editor-header {
+            background: #37474F; color: white; padding: 10px 20px;
+            font-family: 'Fredoka One', cursive; display: flex; justify-content: space-between;
+        }
+        #codeArea {
+            flex: 1; background: #263238; color: #FFF; border: none; padding: 20px;
+            font-family: 'Courier New', monospace; font-size: 1.1rem; resize: none; outline: none;
+            line-height: 1.5;
+        }
+
+        /* The Preview (Right) */
+        .preview-panel {
+            flex: 1; background: #81D4FA; /* Sky Blue */
+            border-radius: 15px; border: 4px solid var(--primary-blue);
+            position: relative; overflow: hidden;
+            background-image: url('https://www.transparenttextures.com/patterns/clouds.png');
+        }
+        .ground {
+            position: absolute; bottom: 0; width: 100%; height: 100px;
+            background: #4CAF50; border-top: 10px solid #388E3C;
+        }
+        
+        /* --- MAGIC CSS CLASSES (The kids "call" these) --- */
+        .castle-container {
+            position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+            display: flex; align-items: flex-end; justify-content: center;
+        }
+        
+        /* These are the classes the user will type! */
+        .wall {
+            width: 80px; height: 80px; background: #BCAAA4;
+            border: 2px solid #5D4037; display: inline-block; margin: 0 2px;
+            background-image: 
+                linear-gradient(335deg, rgba(0,0,0,0.1) 23px, transparent 23px),
+                linear-gradient(155deg, rgba(0,0,0,0.1) 23px, transparent 23px);
+            background-size: 58px 58px;
+        }
+        .tower {
+            width: 60px; height: 120px; background: #8D6E63;
+            border: 2px solid #5D4037; display: inline-block; margin: 0 2px;
+            position: relative;
+        }
+        .roof {
+            width: 0; height: 0; border-left: 40px solid transparent; border-right: 40px solid transparent;
+            border-bottom: 60px solid #D32F2F; position: absolute; top: -60px; left: -12px;
+        }
+        .door {
+            width: 40px; height: 60px; background: #3E2723;
+            border-radius: 20px 20px 0 0; margin: 0 auto; margin-top: 20px;
+        }
+
+        /* Task Box */
+        .task-box {
+            background: var(--sunny-yellow); padding: 15px; border-radius: 10px;
+            margin-bottom: 20px; border: 2px solid #FBC02D;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo"><i class="fas fa-bolt"></i> Code Spark</a>
+            <a href="index.html" class="btn btn-secondary">Exit Level</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <div class="task-box">
+            <h3>🧙‍♂️ Arch-Wizard's Order:</h3>
+            <p id="taskText">Task 1: Every castle needs a name! Type <code>&lt;h1&gt;My Castle&lt;/h1&gt;</code> in the box.</p>
+        </div>
+
+        <div class="game-wrapper">
+            <div class="editor-panel">
+                <div class="editor-header">
+                    <span>HTML Scroll</span>
+                    <button class="btn-sm" onclick="resetCastle()" style="cursor:pointer; background:none; border:none; color:white;"><i class="fas fa-undo"></i> Reset</button>
+                </div>
+                <textarea id="codeArea" spellcheck="false" placeholder="Type your magic spells (tags) here..."></textarea>
+            </div>
+
+            <div class="preview-panel">
+                <div id="castle-ground" class="castle-container"></div>
+                <div class="ground"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="castle-game.js"></script>
+</body>
+</html>
