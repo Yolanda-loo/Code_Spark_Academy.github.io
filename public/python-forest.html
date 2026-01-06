@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 1: Python Forest | Code Spark</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Specific Styles for the Game Interface */
+        .game-wrapper {
+            display: flex;
+            gap: 20px;
+            max-width: 1000px;
+            margin: 40px auto;
+            flex-wrap: wrap;
+        }
+        
+        /* The "Code" Side */
+        .console-panel {
+            flex: 1;
+            min-width: 300px;
+            background: #263238;
+            color: #80CBC4;
+            padding: 20px;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            box-shadow: var(--shadow);
+            height: 500px;
+            overflow-y: auto;
+            border: 4px solid var(--primary-blue);
+        }
+        .line-num { color: #546E7A; margin-right: 10px; user-select: none; }
+        .keyword { color: #C792EA; } /* Purple for def, if */
+        .func { color: #82B1FF; }    /* Blue for functions */
+        .string { color: #C3E88D; }  /* Green for strings */
+
+        /* The "Visual" Side */
+        .canvas-container {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        canvas {
+            background: #2E7D32; /* Jungle Green */
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 5px solid #1B5E20;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 10px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem;
+            color: var(--dark-text);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo"><i class="fas fa-bolt"></i> Code Spark</a>
+            <a href="courses.html" class="btn btn-secondary">Exit Level</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="game-wrapper">
+            
+            <div class="console-panel" id="consoleOutput">
+                <div><span class="line-num">1</span> <span class="keyword">def</span> <span class="func">start_adventure</span>():</div>
+                <div><span class="line-num">2</span> &nbsp;&nbsp; <span class="func">print</span>(<span class="string">"Welcome to Python Forest!"</span>)</div>
+                <div><span class="line-num">3</span> &nbsp;&nbsp; snake.<span class="func">speed</span> = 10</div>
+                <div id="dynamic-code"></div>
+                </div>
+
+            <div class="canvas-container">
+                <div class="stats-bar">
+                    <span>🍎 Score: <span id="score">0</span></span>
+                    <span>High Score: <span id="highScore">0</span></span>
+                </div>
+                <canvas id="gameCanvas" width="400" height="400"></canvas>
+                <br>
+                <p>Use <b>Arrow Keys</b> to guide the snake!</p>
+                <button class="btn btn-primary" onclick="resetGame()">Restart Game</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
