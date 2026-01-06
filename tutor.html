@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Sparkie | Code Spark Academy</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo"><i class="fas fa-bolt"></i> Code Spark</a>
+            <div class="hamburger"><i class="fas fa-bars"></i></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="tutor.html" style="color:var(--magic-purple)">AI Tutor</a></li>
+                <li><a href="signup.html" class="btn btn-secondary">Log In</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="section-padding">
+        <div class="container text-center">
+            <h1>Meet Sparkie! 🤖</h1>
+            <p>Ask me anything about coding, space, or dinosaurs!</p>
+            <br>
+            
+            <div class="chat-window">
+                <div class="chat-header">
+                    <h4>Chatting with Sparkie</h4>
+                </div>
+                <div class="chat-body" id="chatBody">
+                    <div class="message bot-msg">Beep Boop! Hi friend! 👋 Try asking me: "Teach me loops!"</div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="userInput" class="chat-input" placeholder="Type your message here..." onkeypress="handleEnter(event)">
+                    <button class="btn btn-primary" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container text-center">
+            <p>&copy; 2024 Code Spark Academy.</p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
