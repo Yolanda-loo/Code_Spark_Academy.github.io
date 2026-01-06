@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Us | Code Spark Academy</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo"><i class="fas fa-bolt"></i> Code Spark</a>
+            <div class="hamburger"><i class="fas fa-bars"></i></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="section-padding flex-center" style="min-height: 80vh;">
+        <div class="card" style="max-width: 400px; width: 100%;">
+            <h2>Create Profile</h2>
+            <p>Parents, please help your explorer sign up!</p>
+            <br>
+            <form id="signupForm">
+                <div style="margin-bottom: 15px; text-align: left;">
+                    <label>Explorer Name:</label>
+                    <input type="text" id="username" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                </div>
+                <div style="margin-bottom: 15px; text-align: left;">
+                    <label>Age:</label>
+                    <select style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                        <option>6-8 Years</option>
+                        <option>9-10 Years</option>
+                        <option>11-12 Years</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-cta" style="width: 100%;">Start Coding!</button>
+            </form>
+            <br>
+            <p id="welcomeMsg" style="color: var(--slime-green); font-weight: bold;"></p>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+    <script>
+        // Specific logic for Signup Page
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('username').value;
+            localStorage.setItem('explorerName', name);
+            document.getElementById('welcomeMsg').innerText = `Awesome, ${name}! Redirecting to mission control...`;
+            setTimeout(() => { window.location.href = 'courses.html'; }, 2000);
+        });
+    </script>
+</body>
+</html>
