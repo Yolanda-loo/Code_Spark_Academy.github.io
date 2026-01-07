@@ -9,63 +9,32 @@
     <style>
         /* --- Search Bar Styles --- */
         .search-wrapper {
-            background: var(--primary-blue);
-            padding: 40px 20px;
-            text-align: center;
-            border-bottom: 5px solid var(--magic-purple);
+            background: #29B6F6; padding: 40px 20px; text-align: center;
+            border-bottom: 5px solid #AB47BC;
         }
-        .search-box {
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-        }
+        .search-box { max-width: 600px; margin: 0 auto; position: relative; }
         #searchInput {
-            width: 100%;
-            padding: 15px 50px 15px 20px;
-            font-size: 1.2rem;
-            border-radius: 50px;
-            border: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            outline: none;
-            font-family: 'Nunito', sans-serif;
+            width: 100%; padding: 15px 50px 15px 20px; font-size: 1.2rem;
+            border-radius: 50px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.2); outline: none;
+            font-family: sans-serif;
         }
         .search-icon {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--primary-blue);
-            font-size: 1.2rem;
+            position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+            color: #29B6F6; font-size: 1.2rem;
         }
 
         /* --- Download Cards --- */
         .resource-card {
-            background: white;
-            border: 2px dashed #B0BEC5; /* Dashed look like a cut-out worksheet */
-            border-radius: 15px;
-            padding: 20px;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
+            background: white; border: 2px dashed #B0BEC5; border-radius: 15px;
+            padding: 20px; transition: 0.3s; position: relative; overflow: hidden;
         }
         .resource-card:hover {
-            border-color: var(--magic-purple);
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
+            border-color: #AB47BC; transform: translateY(-5px); box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        .file-icon {
-            font-size: 3rem;
-            color: var(--sunny-yellow);
-            margin-bottom: 15px;
-            display: block;
-        }
+        .file-icon { font-size: 3rem; color: #FFEE58; margin-bottom: 15px; display: block; }
         .tag {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-bottom: 10px;
+            display: inline-block; padding: 4px 10px; border-radius: 20px;
+            font-size: 0.8rem; font-weight: bold; margin-bottom: 10px;
         }
         .tag-math { background: #FFCC80; color: #E65100; }
         .tag-code { background: #B39DDB; color: #4527A0; }
@@ -73,21 +42,11 @@
 
         /* --- Blog Layout --- */
         .blog-row {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 30px;
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
+            display: flex; gap: 20px; margin-bottom: 30px; background: white;
+            border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             align-items: center;
         }
-        .blog-img {
-            width: 200px;
-            height: 100%;
-            object-fit: cover;
-            min-height: 150px;
-        }
+        .blog-img { width: 200px; height: 100%; object-fit: cover; min-height: 150px; }
         .blog-content { padding: 20px; }
         
         @media (max-width: 768px) {
@@ -107,7 +66,7 @@
                 <li><a href="about.html">About</a></li>
                 <li><a href="courses.html">Courses</a></li>
                 <li><a href="tutor.html">AI Tutor</a></li>
-                <li><a href="resources.html" style="color:var(--magic-purple)">Resources</a></li>
+                <li><a href="resources.html" style="color:#AB47BC">Resources</a></li>
                 <li><a href="signup.html" class="btn btn-secondary">Start Free</a></li>
             </ul>
         </div>
@@ -134,7 +93,7 @@
                     <h3>Binary Color-by-Number</h3>
                     <p>Learn 0s and 1s by coloring a robot picture.</p>
                     <br>
-                    <button class="btn btn-secondary btn-sm" onclick="alert('Downloading Binary_Coloring.pdf...')">Download PDF ⬇️</button>
+                    <a href="downloads/binary-coloring.pdf" download class="btn btn-secondary btn-sm">Download PDF ⬇️</a>
                 </div>
 
                 <div class="resource-card filter-item">
@@ -143,7 +102,7 @@
                     <h3>Space Coordinates</h3>
                     <p>Help the astronaut find the planet using X and Y axes.</p>
                     <br>
-                    <button class="btn btn-secondary btn-sm" onclick="alert('Downloading Space_Math.pdf...')">Download PDF ⬇️</button>
+                    <a href="downloads/space-math.pdf" download class="btn btn-secondary btn-sm">Download PDF ⬇️</a>
                 </div>
 
                 <div class="resource-card filter-item">
@@ -152,7 +111,7 @@
                     <h3>Kitchen Chemistry</h3>
                     <p>3 safe experiments you can do with baking soda.</p>
                     <br>
-                    <button class="btn btn-secondary btn-sm" onclick="alert('Downloading Experiments.pdf...')">Download PDF ⬇️</button>
+                    <a href="downloads/experiments.pdf" download class="btn btn-secondary btn-sm">Download PDF ⬇️</a>
                 </div>
 
                 <div class="resource-card filter-item">
@@ -161,7 +120,7 @@
                     <h3>Python Cheat Sheet</h3>
                     <p>All the basic commands for your Python Forest adventure.</p>
                     <br>
-                    <button class="btn btn-secondary btn-sm" onclick="alert('Downloading Python_CheatSheet.pdf...')">Download PDF ⬇️</button>
+                    <a href="downloads/python-cheatsheet.pdf" download class="btn btn-secondary btn-sm">Download PDF ⬇️</a>
                 </div>
 
                 <div class="resource-card filter-item">
@@ -170,7 +129,7 @@
                     <h3>Keyboard Shortcuts</h3>
                     <p>Become a speed coder with these hotkeys!</p>
                     <br>
-                    <button class="btn btn-secondary btn-sm" onclick="alert('Downloading Shortcuts.pdf...')">Download PDF ⬇️</button>
+                    <a href="downloads/shortcuts.pdf" download class="btn btn-secondary btn-sm">Download PDF ⬇️</a>
                 </div>
 
                  <div class="resource-card filter-item">
@@ -179,7 +138,7 @@
                     <h3>Geometry Hunt</h3>
                     <p>Go outside and find shapes in nature.</p>
                     <br>
-                    <button class="btn btn-secondary btn-sm" onclick="alert('Downloading Geometry_Hunt.pdf...')">Download PDF ⬇️</button>
+                    <a href="downloads/geometry-hunt.pdf" download class="btn btn-secondary btn-sm">Download PDF ⬇️</a>
                 </div>
 
             </div>
@@ -190,64 +149,45 @@
         <div class="container">
             <h2 class="text-center">Parent's Corner ☕</h2>
             <br><br>
-            
             <article class="blog-row">
                 <img src="https://placehold.co/300x200/AB47BC/FFF?text=Creativity" class="blog-img">
                 <div class="blog-content">
                     <h3>5 Ways Coding Boosts Creativity</h3>
-                    <p>Coding isn't just math—it's art! Discover how building games helps children express themselves and tell stories.</p>
+                    <p>Coding isn't just math—it's art! Discover how building games helps children express themselves.</p>
                     <br>
-                    <a href="#" style="color: var(--primary-blue); font-weight: bold;">Read Article &rarr;</a>
+                    <a href="#" style="color: #29B6F6; font-weight: bold;">Read Article &rarr;</a>
                 </div>
             </article>
-
             <article class="blog-row">
                 <img src="https://placehold.co/300x200/29B6F6/FFF?text=Safety" class="blog-img">
                 <div class="blog-content">
                     <h3>Internet Safety for Young Explorers</h3>
-                    <p>Simple tips to keep your children safe while they learn online. Why we don't allow open chatrooms.</p>
+                    <p>Simple tips to keep your children safe while they learn online.</p>
                     <br>
-                    <a href="#" style="color: var(--primary-blue); font-weight: bold;">Read Article &rarr;</a>
+                    <a href="#" style="color: #29B6F6; font-weight: bold;">Read Article &rarr;</a>
                 </div>
             </article>
-
         </div>
     </section>
 
     <footer>
         <div class="container text-center">
             <p>&copy; 2024 Code Spark Academy. Made with ✨ for Kids.</p>
-            <div class="footer-links">
-                <a href="#">Privacy Policy</a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
         </div>
     </footer>
 
     <script src="script.js"></script>
-    
     <script>
         function filterResources() {
-            // 1. Get the user input
             let input = document.getElementById('searchInput').value.toUpperCase();
-            
-            // 2. Get all the resource cards
             let cards = document.getElementsByClassName('filter-item');
-            
-            // 3. Loop through cards and hide those that don't match
             for (let i = 0; i < cards.length; i++) {
-                let title = cards[i].getElementsByTagName("h3")[0];
-                let tag = cards[i].getElementsByClassName("tag")[0];
-                
-                // Search in both Title and Tag name
-                let textValue = title.textContent || title.innerText;
-                let tagValue = tag.textContent || tag.innerText;
-
-                if (textValue.toUpperCase().indexOf(input) > -1 || tagValue.toUpperCase().indexOf(input) > -1) {
-                    cards[i].style.display = ""; // Show
+                let title = cards[i].getElementsByTagName("h3")[0].innerText;
+                let tag = cards[i].getElementsByClassName("tag")[0].innerText;
+                if (title.toUpperCase().indexOf(input) > -1 || tag.toUpperCase().indexOf(input) > -1) {
+                    cards[i].style.display = "";
                 } else {
-                    cards[i].style.display = "none"; // Hide
+                    cards[i].style.display = "none";
                 }
             }
         }
