@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // --- 🤖 REAL AI CONFIGURATION ---
 // Initialize Gemini API
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-001" });
 
 // This tells the AI how to behave (The "Persona")
 const SPARKIE_PERSONA = `
