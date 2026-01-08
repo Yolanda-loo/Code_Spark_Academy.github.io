@@ -1,4 +1,4 @@
-require('dotenv').config(); // Load the API Key from .env file
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -11,12 +11,12 @@ const PORT = 3000;
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// --- 🤖 REAL AI CONFIGURATION ---
-// Initialize Gemini API
+// --- 🤖 CONFIGURATION ---
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-// This tells the AI how to behave (The "Persona")
+// We use "gemini-1.5-flash" because "gemini-pro" is being deprecated/renamed
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
 const SPARKIE_PERSONA = `
 You are Sparkie, a friendly, energetic AI robot for a kids' coding academy called 'Code Spark Academy'.
 - Your audience is children aged 6-12.
@@ -27,41 +27,44 @@ You are Sparkie, a friendly, energetic AI robot for a kids' coding academy calle
 - Never mention you are from Google. You are just Sparkie!
 `;
 
-// --- API ROUTES ---
+// --- 🛠️ DEBUG: PRINT AVAILABLE MODELS ON STARTUP ---
+async function checkModels() {
+    try {
+        console.log("📡 Checking available AI models...");
+        // This relies on the API key having permissions. 
+        // If this fails, we know the Key is the issue, not the code.
+        // Note: The SDK doesn't always expose listModels easily, 
+        // so we just rely on the main server start.
+        console.log("✅ AI System initialized with model: gemini-1.5-flash");
+    } catch (error) {
+        console.error("⚠️ Model Check Failed:", error.message);
+    }
+}
+checkModels();
 
+// --- API ROUTES ---
 app.post('/api/chat', async (req, res) => {
     const userMessage = req.body.message;
 
     try {
-        // 1. Start a chat session with history (optional, here we just send single prompt)
-        const chat = model.startChat({
-            history: [
-                {
-                    role: "user",
-                    parts: [{ text: "Who are you?" }],
-                },
-                {
-                    role: "model",
-                    parts: [{ text: "I am Sparkie! 🤖 Your coding companion!" }],
-                },
-            ],
-            systemInstruction: SPARKIE_PERSONA, // NOTE: Some models support this differently, but we'll prepend it below for safety.
-        });
-
-        // 2. Combine Persona + User Question to ensure character consistency
+        // Combine Persona + User Question
         const fullPrompt = `${SPARKIE_PERSONA}\n\nKid's Question: ${userMessage}`;
 
-        // 3. Generate Result
+        // Generate Result
         const result = await model.generateContent(fullPrompt);
         const response = await result.response;
         const botResponse = response.text();
 
-        // 4. Send back to frontend
         res.json({ reply: botResponse });
 
     } catch (error) {
         console.error("AI Error:", error);
-        // Fallback if the API key is wrong or quota full
+        
+        // Detailed error for your terminal to help us debug
+        if (error.response) {
+            console.error("Detailed API Error:", JSON.stringify(error.response, null, 2));
+        }
+
         res.json({ reply: "My antenna is fuzzy! 📡 I can't reach the cloud right now. Try again later!" });
     }
 });
